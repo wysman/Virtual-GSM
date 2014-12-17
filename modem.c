@@ -37,10 +37,14 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <stdio.h>
+#include <unistd.h>
 
 #include "types.h"
 
 #define MODEM_READ_BUFFER_SIZE  32
+
+void ModemParserExecute(ModemParserCtx_t *ctx, int fd, const char *buffer, size_t len);
+void ModemParserInit(ModemParserCtx_t *ctx);
 
 ModemStatus_t GSM = {
     .smsCount = 0,
@@ -55,14 +59,14 @@ ModemParserCtx_t modemCtx = {
 ModemParserCtx_t *modemCtxHandler = &modemCtx;
 
 int
-main (int argc, char **argv)
+main (void)
 {
     int ret;
     char buffer[MODEM_READ_BUFFER_SIZE];
 
     // Create virtual COM
     int fd = open("/dev/ptmx", O_RDWR | O_NOCTTY);
-    assert(fd != NULL);
+    assert(fd != 0);
 
     
     ret = grantpt(fd);

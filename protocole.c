@@ -33,18 +33,20 @@
 #include "types.h"
 #include "cmd.h"
 
+void executeCmd(ModemParserCtx_t *ctx, int fd);
+
 #define LEN(AT, FPC) (FPC - ctx->buffer - ctx->AT)
 #define MARK(M,FPC) (ctx->M = (FPC) - ctx->buffer)
 #define PTR_TO(F) (ctx->buffer + ctx->F)
 
 /** machine **/
 
-#line 141 "protocole.rl"
+#line 143 "protocole.rl"
 
 
 /** Data **/
 
-#line 48 "protocole.c"
+#line 50 "protocole.c"
 static const int modem_gsm_start = 34;
 static const int modem_gsm_first_final = 34;
 static const int modem_gsm_error = 0;
@@ -53,19 +55,19 @@ static const int modem_gsm_en_main = 34;
 static const int modem_gsm_en_errors = 33;
 
 
-#line 145 "protocole.rl"
+#line 147 "protocole.rl"
 
 void
 ModemParserInit(ModemParserCtx_t *ctx)  {
     int cs = 0;
 
     
-#line 64 "protocole.c"
+#line 66 "protocole.c"
 	{
 	cs = modem_gsm_start;
 	}
 
-#line 151 "protocole.rl"
+#line 153 "protocole.rl"
 
     if (ctx->buffer == NULL) {
         ctx->buffer_size = 1024;
@@ -98,7 +100,7 @@ ModemParserExecute(ModemParserCtx_t *ctx, int fd, const char *buffer, size_t len
     pe = ctx->buffer + ctx->buffer_len;
 
     
-#line 102 "protocole.c"
+#line 104 "protocole.c"
 	{
 	if ( p == pe )
 		goto _test_eof;
@@ -115,36 +117,36 @@ case 34:
 	}
 	goto tr44;
 tr0:
-#line 71 "protocole.rl"
+#line 73 "protocole.rl"
 	{
         {goto st33;}
     }
 	goto st0;
 tr44:
-#line 62 "protocole.rl"
+#line 64 "protocole.rl"
 	{
         p--; {goto st33;}
     }
 	goto st0;
-#line 130 "protocole.c"
+#line 132 "protocole.c"
 st0:
 cs = 0;
 	goto _out;
 tr18:
-#line 110 "protocole.rl"
+#line 112 "protocole.rl"
 	{
         ctx->arg[ctx->arg_count] = ctx->mark;
         ctx->arg_len[ctx->arg_count] = LEN(mark, p);
         ctx->arg_count++;
     }
-#line 52 "protocole.rl"
+#line 54 "protocole.rl"
 	{
         executeCmd(ctx, fd);
         ModemParserInit(ctx);   // Reset the parser
     }
 	goto st35;
 tr47:
-#line 52 "protocole.rl"
+#line 54 "protocole.rl"
 	{
         executeCmd(ctx, fd);
         ModemParserInit(ctx);   // Reset the parser
@@ -154,7 +156,7 @@ st35:
 	if ( ++p == pe )
 		goto _test_eof35;
 case 35:
-#line 158 "protocole.c"
+#line 160 "protocole.c"
 	switch( (*p) ) {
 		case 10: goto st35;
 		case 13: goto st35;
@@ -178,56 +180,56 @@ case 2:
 	}
 	goto tr0;
 tr2:
-#line 87 "protocole.rl"
+#line 89 "protocole.rl"
 	{
         ctx->cmd = CMD_AT;
     }
-#line 52 "protocole.rl"
+#line 54 "protocole.rl"
 	{
         executeCmd(ctx, fd);
         ModemParserInit(ctx);   // Reset the parser
     }
 	goto st36;
 tr26:
-#line 110 "protocole.rl"
+#line 112 "protocole.rl"
 	{
         ctx->arg[ctx->arg_count] = ctx->mark;
         ctx->arg_len[ctx->arg_count] = LEN(mark, p);
         ctx->arg_count++;
     }
-#line 95 "protocole.rl"
+#line 97 "protocole.rl"
 	{
         ctx->cmd = CMD_PIN_UNLOCK;
     }
-#line 52 "protocole.rl"
+#line 54 "protocole.rl"
 	{
         executeCmd(ctx, fd);
         ModemParserInit(ctx);   // Reset the parser
     }
 	goto st36;
 tr30:
-#line 110 "protocole.rl"
+#line 112 "protocole.rl"
 	{
         ctx->arg[ctx->arg_count] = ctx->mark;
         ctx->arg_len[ctx->arg_count] = LEN(mark, p);
         ctx->arg_count++;
     }
-#line 99 "protocole.rl"
+#line 101 "protocole.rl"
 	{
         ctx->cmd = CMD_PIN_CHANGE;
     }
-#line 52 "protocole.rl"
+#line 54 "protocole.rl"
 	{
         executeCmd(ctx, fd);
         ModemParserInit(ctx);   // Reset the parser
     }
 	goto st36;
 tr40:
-#line 91 "protocole.rl"
+#line 93 "protocole.rl"
 	{
         ctx->cmd = CMD_PIN_STATUS;
     }
-#line 52 "protocole.rl"
+#line 54 "protocole.rl"
 	{
         executeCmd(ctx, fd);
         ModemParserInit(ctx);   // Reset the parser
@@ -237,7 +239,7 @@ st36:
 	if ( ++p == pe )
 		goto _test_eof36;
 case 36:
-#line 241 "protocole.c"
+#line 243 "protocole.c"
 	switch( (*p) ) {
 		case 10: goto tr47;
 		case 13: goto st35;
@@ -291,17 +293,17 @@ case 8:
 		goto tr11;
 	goto tr0;
 tr10:
-#line 103 "protocole.rl"
+#line 105 "protocole.rl"
 	{
         ctx->cmd = CMD_SEND_SMS;
     }
-#line 45 "protocole.rl"
+#line 47 "protocole.rl"
 	{
         MARK(mark, p);
     }
 	goto st9;
 tr19:
-#line 45 "protocole.rl"
+#line 47 "protocole.rl"
 	{
         MARK(mark, p);
     }
@@ -310,22 +312,22 @@ st9:
 	if ( ++p == pe )
 		goto _test_eof9;
 case 9:
-#line 314 "protocole.c"
+#line 316 "protocole.c"
 	if ( 48 <= (*p) && (*p) <= 57 )
 		goto st10;
 	goto tr0;
 tr11:
-#line 103 "protocole.rl"
+#line 105 "protocole.rl"
 	{
         ctx->cmd = CMD_SEND_SMS;
     }
-#line 45 "protocole.rl"
+#line 47 "protocole.rl"
 	{
         MARK(mark, p);
     }
 	goto st10;
 tr20:
-#line 45 "protocole.rl"
+#line 47 "protocole.rl"
 	{
         MARK(mark, p);
     }
@@ -334,7 +336,7 @@ st10:
 	if ( ++p == pe )
 		goto _test_eof10;
 case 10:
-#line 338 "protocole.c"
+#line 340 "protocole.c"
 	switch( (*p) ) {
 		case 13: goto tr13;
 		case 44: goto tr14;
@@ -343,13 +345,13 @@ case 10:
 		goto st10;
 	goto tr0;
 tr13:
-#line 110 "protocole.rl"
+#line 112 "protocole.rl"
 	{
         ctx->arg[ctx->arg_count] = ctx->mark;
         ctx->arg_len[ctx->arg_count] = LEN(mark, p);
         ctx->arg_count++;
     }
-#line 116 "protocole.rl"
+#line 118 "protocole.rl"
 	{
         write(fd, "> ", 2);
     }
@@ -358,7 +360,7 @@ st11:
 	if ( ++p == pe )
 		goto _test_eof11;
 case 11:
-#line 362 "protocole.c"
+#line 364 "protocole.c"
 	switch( (*p) ) {
 		case 10: goto tr16;
 		case 32: goto tr15;
@@ -376,7 +378,7 @@ case 11:
 		goto tr15;
 	goto tr0;
 tr15:
-#line 45 "protocole.rl"
+#line 47 "protocole.rl"
 	{
         MARK(mark, p);
     }
@@ -385,7 +387,7 @@ st12:
 	if ( ++p == pe )
 		goto _test_eof12;
 case 12:
-#line 389 "protocole.c"
+#line 391 "protocole.c"
 	switch( (*p) ) {
 		case 26: goto tr18;
 		case 32: goto st12;
@@ -403,7 +405,7 @@ case 12:
 		goto st12;
 	goto tr0;
 tr16:
-#line 45 "protocole.rl"
+#line 47 "protocole.rl"
 	{
         MARK(mark, p);
     }
@@ -412,7 +414,7 @@ st13:
 	if ( ++p == pe )
 		goto _test_eof13;
 case 13:
-#line 416 "protocole.c"
+#line 418 "protocole.c"
 	switch( (*p) ) {
 		case 26: goto tr18;
 		case 32: goto tr15;
@@ -430,7 +432,7 @@ case 13:
 		goto tr15;
 	goto tr0;
 tr14:
-#line 110 "protocole.rl"
+#line 112 "protocole.rl"
 	{
         ctx->arg[ctx->arg_count] = ctx->mark;
         ctx->arg_len[ctx->arg_count] = LEN(mark, p);
@@ -441,7 +443,7 @@ st14:
 	if ( ++p == pe )
 		goto _test_eof14;
 case 14:
-#line 445 "protocole.c"
+#line 447 "protocole.c"
 	if ( (*p) == 43 )
 		goto tr19;
 	if ( 48 <= (*p) && (*p) <= 57 )
@@ -478,7 +480,7 @@ case 18:
 		goto tr24;
 	goto tr0;
 tr24:
-#line 45 "protocole.rl"
+#line 47 "protocole.rl"
 	{
         MARK(mark, p);
     }
@@ -487,7 +489,7 @@ st19:
 	if ( ++p == pe )
 		goto _test_eof19;
 case 19:
-#line 491 "protocole.c"
+#line 493 "protocole.c"
 	switch( (*p) ) {
 		case 13: goto tr26;
 		case 44: goto tr27;
@@ -496,7 +498,7 @@ case 19:
 		goto st27;
 	goto tr0;
 tr27:
-#line 110 "protocole.rl"
+#line 112 "protocole.rl"
 	{
         ctx->arg[ctx->arg_count] = ctx->mark;
         ctx->arg_len[ctx->arg_count] = LEN(mark, p);
@@ -507,12 +509,12 @@ st20:
 	if ( ++p == pe )
 		goto _test_eof20;
 case 20:
-#line 511 "protocole.c"
+#line 513 "protocole.c"
 	if ( 48 <= (*p) && (*p) <= 57 )
 		goto tr29;
 	goto tr0;
 tr29:
-#line 45 "protocole.rl"
+#line 47 "protocole.rl"
 	{
         MARK(mark, p);
     }
@@ -521,7 +523,7 @@ st21:
 	if ( ++p == pe )
 		goto _test_eof21;
 case 21:
-#line 525 "protocole.c"
+#line 527 "protocole.c"
 	if ( (*p) == 13 )
 		goto tr30;
 	if ( 48 <= (*p) && (*p) <= 57 )
@@ -640,7 +642,7 @@ case 33:
 	}
 	goto st33;
 tr43:
-#line 78 "protocole.rl"
+#line 80 "protocole.rl"
 	{
         write(fd, "ERROR\r\n", 7);
         ctx->arg_count = 0;
@@ -651,12 +653,12 @@ st37:
 	if ( ++p == pe )
 		goto _test_eof37;
 case 37:
-#line 655 "protocole.c"
+#line 657 "protocole.c"
 	if ( (*p) == 10 )
 		goto tr48;
 	goto st0;
 tr48:
-#line 78 "protocole.rl"
+#line 80 "protocole.rl"
 	{
         write(fd, "ERROR\r\n", 7);
         ctx->arg_count = 0;
@@ -667,7 +669,7 @@ st38:
 	if ( ++p == pe )
 		goto _test_eof38;
 case 38:
-#line 671 "protocole.c"
+#line 673 "protocole.c"
 	goto st0;
 	}
 	_test_eof34: cs = 34; goto _test_eof; 
@@ -745,19 +747,19 @@ case 38:
 	case 30: 
 	case 31: 
 	case 32: 
-#line 71 "protocole.rl"
+#line 73 "protocole.rl"
 	{
         {goto st33;}
     }
 	break;
-#line 754 "protocole.c"
+#line 756 "protocole.c"
 	}
 	}
 
 	_out: {}
 	}
 
-#line 183 "protocole.rl"
+#line 185 "protocole.rl"
     
     ctx->cs = cs;
 }

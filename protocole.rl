@@ -31,6 +31,8 @@
 #include "types.h"
 #include "cmd.h"
 
+void executeCmd(ModemParserCtx_t *ctx, int fd);
+
 #define LEN(AT, FPC) (FPC - ctx->buffer - ctx->AT)
 #define MARK(M,FPC) (ctx->M = (FPC) - ctx->buffer)
 #define PTR_TO(F) (ctx->buffer + ctx->F)
