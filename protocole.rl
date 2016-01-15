@@ -27,6 +27,7 @@
 #include <ctype.h>
 #include <string.h>
 #include <unistd.h>
+#include <termios.h>
 
 #include "types.h"
 #include "cmd.h"
@@ -116,6 +117,8 @@ void executeCmd(ModemParserCtx_t *ctx, int fd);
     }
     
     action send_sms_prompt {
+        sleep(1);   // Emulate network lag
+        tcflush(fd, TCIFLUSH);
         write(fd, "> ", 2);
     }
 

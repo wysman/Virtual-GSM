@@ -26,6 +26,7 @@
 #include <stdio.h>
 #include <stdarg.h>
 #include <unistd.h>
+#include <termios.h>
 
 #include "types.h"
 #include "cmd.h"
@@ -36,6 +37,13 @@ static int _fd;
 #define SEND_ERROR() SEND("ERROR\r\n")
 
 
+static inline
+void
+emulate_fw_activity(void)
+{
+    usleep(200000);
+    tcflush(_fd, TCIFLUSH);
+}
 
 /*
  *  +CPIN
@@ -123,26 +131,32 @@ dispatchCmd(uint32_t cmd, uint32_t nb_args, char **args)
             break;
     
         case CMD_AT:
+            emulate_fw_activity();
             SEND_OK();
             break;
         
         case CMD_PIN_STATUS:
+            emulate_fw_activity();
             pincodeValidate();
             break;
         
         case CMD_PIN_UNLOCK:
+            emulate_fw_activity();
             pincodeUnlock(args[0]);
             break;
             
         case CMD_PIN_CHANGE:
+            emulate_fw_activity();
             pincodeUpdate(args[0], args[1]);
             break;
             
         case CMD_SEND_SMS:
+            emulate_fw_activity();
             sendSMS(nb_args, args);
             break;
             
         default:
+           emulate_fw_activity();
            SEND_ERROR(); 
     }
 }
