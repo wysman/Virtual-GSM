@@ -141,7 +141,7 @@ void executeCmd(ModemParserCtx_t *ctx, int fd);
     CMDS = (CMD_AT | CMD_PIN_STATUS | CMD_PIN_UNLOCK | CMD_PIN_CHANGE | CMD_SEND_SMS);
 
 # protocole
-    main := ( (CR? LF?)* CMDS? @done )+ >err(syntax_error_initial) @err(syntax_error);
+    main := ( (CR? LF)* CMDS @done )+ >err(syntax_error_initial) @err(syntax_error);
     errors := (any -- (CR | LF))* (CR LF?) @done_errors;
 }%%
 

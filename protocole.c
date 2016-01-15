@@ -29,6 +29,7 @@
 #include <ctype.h>
 #include <string.h>
 #include <unistd.h>
+#include <termios.h>
 
 #include "types.h"
 #include "cmd.h"
@@ -41,33 +42,33 @@ void executeCmd(ModemParserCtx_t *ctx, int fd);
 
 /** machine **/
 
-#line 143 "protocole.rl"
+#line 146 "protocole.rl"
 
 
 /** Data **/
 
-#line 50 "protocole.c"
-static const int modem_gsm_start = 34;
-static const int modem_gsm_first_final = 34;
+#line 51 "protocole.c"
+static const int modem_gsm_start = 1;
+static const int modem_gsm_first_final = 37;
 static const int modem_gsm_error = 0;
 
-static const int modem_gsm_en_main = 34;
-static const int modem_gsm_en_errors = 33;
+static const int modem_gsm_en_main = 1;
+static const int modem_gsm_en_errors = 36;
 
 
-#line 147 "protocole.rl"
+#line 150 "protocole.rl"
 
 void
 ModemParserInit(ModemParserCtx_t *ctx)  {
     int cs = 0;
 
     
-#line 66 "protocole.c"
+#line 67 "protocole.c"
 	{
 	cs = modem_gsm_start;
 	}
 
-#line 153 "protocole.rl"
+#line 156 "protocole.rl"
 
     if (ctx->buffer == NULL) {
         ctx->buffer_size = 1024;
@@ -100,285 +101,231 @@ ModemParserExecute(ModemParserCtx_t *ctx, int fd, const char *buffer, size_t len
     pe = ctx->buffer + ctx->buffer_len;
 
     
-#line 104 "protocole.c"
+#line 105 "protocole.c"
 	{
 	if ( p == pe )
 		goto _test_eof;
 	switch ( cs )
 	{
-st34:
-	if ( ++p == pe )
-		goto _test_eof34;
-case 34:
-	switch( (*p) ) {
-		case 10: goto st35;
-		case 13: goto st35;
-		case 65: goto st1;
-	}
-	goto tr44;
-tr0:
-#line 73 "protocole.rl"
-	{
-        {goto st33;}
-    }
-	goto st0;
-tr44:
-#line 64 "protocole.rl"
-	{
-        p--; {goto st33;}
-    }
-	goto st0;
-#line 132 "protocole.c"
-st0:
-cs = 0;
-	goto _out;
-tr18:
-#line 112 "protocole.rl"
-	{
-        ctx->arg[ctx->arg_count] = ctx->mark;
-        ctx->arg_len[ctx->arg_count] = LEN(mark, p);
-        ctx->arg_count++;
-    }
-#line 54 "protocole.rl"
-	{
-        executeCmd(ctx, fd);
-        ModemParserInit(ctx);   // Reset the parser
-    }
-	goto st35;
-tr47:
-#line 54 "protocole.rl"
-	{
-        executeCmd(ctx, fd);
-        ModemParserInit(ctx);   // Reset the parser
-    }
-	goto st35;
-st35:
-	if ( ++p == pe )
-		goto _test_eof35;
-case 35:
-#line 160 "protocole.c"
-	switch( (*p) ) {
-		case 10: goto st35;
-		case 13: goto st35;
-		case 65: goto st1;
-	}
-	goto st0;
 st1:
 	if ( ++p == pe )
 		goto _test_eof1;
 case 1:
-	if ( (*p) == 84 )
-		goto st2;
+	switch( (*p) ) {
+		case 10: goto st2;
+		case 13: goto st3;
+		case 65: goto st4;
+	}
 	goto tr0;
+tr0:
+#line 65 "protocole.rl"
+	{
+        p--; {goto st36;}
+    }
+#line 74 "protocole.rl"
+	{
+        {goto st36;}
+    }
+	goto st0;
+tr4:
+#line 74 "protocole.rl"
+	{
+        {goto st36;}
+    }
+	goto st0;
+#line 137 "protocole.c"
+st0:
+cs = 0;
+	goto _out;
 st2:
 	if ( ++p == pe )
 		goto _test_eof2;
 case 2:
 	switch( (*p) ) {
-		case 13: goto tr2;
-		case 43: goto st3;
+		case 10: goto st2;
+		case 13: goto st3;
+		case 65: goto st4;
 	}
-	goto tr0;
-tr2:
-#line 89 "protocole.rl"
-	{
-        ctx->cmd = CMD_AT;
-    }
-#line 54 "protocole.rl"
-	{
-        executeCmd(ctx, fd);
-        ModemParserInit(ctx);   // Reset the parser
-    }
-	goto st36;
-tr26:
-#line 112 "protocole.rl"
-	{
-        ctx->arg[ctx->arg_count] = ctx->mark;
-        ctx->arg_len[ctx->arg_count] = LEN(mark, p);
-        ctx->arg_count++;
-    }
-#line 97 "protocole.rl"
-	{
-        ctx->cmd = CMD_PIN_UNLOCK;
-    }
-#line 54 "protocole.rl"
-	{
-        executeCmd(ctx, fd);
-        ModemParserInit(ctx);   // Reset the parser
-    }
-	goto st36;
-tr30:
-#line 112 "protocole.rl"
-	{
-        ctx->arg[ctx->arg_count] = ctx->mark;
-        ctx->arg_len[ctx->arg_count] = LEN(mark, p);
-        ctx->arg_count++;
-    }
-#line 101 "protocole.rl"
-	{
-        ctx->cmd = CMD_PIN_CHANGE;
-    }
-#line 54 "protocole.rl"
-	{
-        executeCmd(ctx, fd);
-        ModemParserInit(ctx);   // Reset the parser
-    }
-	goto st36;
-tr40:
-#line 93 "protocole.rl"
-	{
-        ctx->cmd = CMD_PIN_STATUS;
-    }
-#line 54 "protocole.rl"
-	{
-        executeCmd(ctx, fd);
-        ModemParserInit(ctx);   // Reset the parser
-    }
-	goto st36;
-st36:
-	if ( ++p == pe )
-		goto _test_eof36;
-case 36:
-#line 243 "protocole.c"
-	switch( (*p) ) {
-		case 10: goto tr47;
-		case 13: goto st35;
-		case 65: goto st1;
-	}
-	goto st0;
+	goto tr4;
 st3:
 	if ( ++p == pe )
 		goto _test_eof3;
 case 3:
-	if ( (*p) == 67 )
-		goto st4;
-	goto tr0;
+	if ( (*p) == 10 )
+		goto st2;
+	goto tr4;
 st4:
 	if ( ++p == pe )
 		goto _test_eof4;
 case 4:
-	switch( (*p) ) {
-		case 77: goto st5;
-		case 80: goto st15;
-	}
-	goto tr0;
+	if ( (*p) == 84 )
+		goto st5;
+	goto tr4;
 st5:
 	if ( ++p == pe )
 		goto _test_eof5;
 case 5:
-	if ( (*p) == 71 )
-		goto st6;
-	goto tr0;
-st6:
-	if ( ++p == pe )
-		goto _test_eof6;
-case 6:
-	if ( (*p) == 83 )
-		goto st7;
-	goto tr0;
-st7:
-	if ( ++p == pe )
-		goto _test_eof7;
-case 7:
-	if ( (*p) == 61 )
-		goto st8;
-	goto tr0;
-st8:
-	if ( ++p == pe )
-		goto _test_eof8;
-case 8:
-	if ( (*p) == 43 )
-		goto tr10;
-	if ( 48 <= (*p) && (*p) <= 57 )
-		goto tr11;
-	goto tr0;
-tr10:
-#line 105 "protocole.rl"
-	{
-        ctx->cmd = CMD_SEND_SMS;
-    }
-#line 47 "protocole.rl"
-	{
-        MARK(mark, p);
-    }
-	goto st9;
-tr19:
-#line 47 "protocole.rl"
-	{
-        MARK(mark, p);
-    }
-	goto st9;
-st9:
-	if ( ++p == pe )
-		goto _test_eof9;
-case 9:
-#line 316 "protocole.c"
-	if ( 48 <= (*p) && (*p) <= 57 )
-		goto st10;
-	goto tr0;
-tr11:
-#line 105 "protocole.rl"
-	{
-        ctx->cmd = CMD_SEND_SMS;
-    }
-#line 47 "protocole.rl"
-	{
-        MARK(mark, p);
-    }
-	goto st10;
-tr20:
-#line 47 "protocole.rl"
-	{
-        MARK(mark, p);
-    }
-	goto st10;
-st10:
-	if ( ++p == pe )
-		goto _test_eof10;
-case 10:
-#line 340 "protocole.c"
 	switch( (*p) ) {
-		case 13: goto tr13;
-		case 44: goto tr14;
+		case 13: goto tr6;
+		case 43: goto st6;
 	}
-	if ( 48 <= (*p) && (*p) <= 57 )
-		goto st10;
-	goto tr0;
-tr13:
-#line 112 "protocole.rl"
+	goto tr4;
+tr6:
+#line 90 "protocole.rl"
+	{
+        ctx->cmd = CMD_AT;
+    }
+#line 55 "protocole.rl"
+	{
+        executeCmd(ctx, fd);
+        ModemParserInit(ctx);   // Reset the parser
+    }
+	goto st37;
+tr30:
+#line 113 "protocole.rl"
 	{
         ctx->arg[ctx->arg_count] = ctx->mark;
         ctx->arg_len[ctx->arg_count] = LEN(mark, p);
         ctx->arg_count++;
     }
-#line 118 "protocole.rl"
+#line 98 "protocole.rl"
 	{
-        write(fd, "> ", 2);
+        ctx->cmd = CMD_PIN_UNLOCK;
     }
-	goto st11;
+#line 55 "protocole.rl"
+	{
+        executeCmd(ctx, fd);
+        ModemParserInit(ctx);   // Reset the parser
+    }
+	goto st37;
+tr34:
+#line 113 "protocole.rl"
+	{
+        ctx->arg[ctx->arg_count] = ctx->mark;
+        ctx->arg_len[ctx->arg_count] = LEN(mark, p);
+        ctx->arg_count++;
+    }
+#line 102 "protocole.rl"
+	{
+        ctx->cmd = CMD_PIN_CHANGE;
+    }
+#line 55 "protocole.rl"
+	{
+        executeCmd(ctx, fd);
+        ModemParserInit(ctx);   // Reset the parser
+    }
+	goto st37;
+tr44:
+#line 94 "protocole.rl"
+	{
+        ctx->cmd = CMD_PIN_STATUS;
+    }
+#line 55 "protocole.rl"
+	{
+        executeCmd(ctx, fd);
+        ModemParserInit(ctx);   // Reset the parser
+    }
+	goto st37;
+st37:
+	if ( ++p == pe )
+		goto _test_eof37;
+case 37:
+#line 234 "protocole.c"
+	switch( (*p) ) {
+		case 10: goto tr48;
+		case 13: goto st3;
+		case 65: goto st4;
+	}
+	goto st0;
+tr22:
+#line 113 "protocole.rl"
+	{
+        ctx->arg[ctx->arg_count] = ctx->mark;
+        ctx->arg_len[ctx->arg_count] = LEN(mark, p);
+        ctx->arg_count++;
+    }
+#line 55 "protocole.rl"
+	{
+        executeCmd(ctx, fd);
+        ModemParserInit(ctx);   // Reset the parser
+    }
+	goto st38;
+tr48:
+#line 55 "protocole.rl"
+	{
+        executeCmd(ctx, fd);
+        ModemParserInit(ctx);   // Reset the parser
+    }
+	goto st38;
+st38:
+	if ( ++p == pe )
+		goto _test_eof38;
+case 38:
+#line 265 "protocole.c"
+	switch( (*p) ) {
+		case 10: goto st2;
+		case 13: goto st3;
+		case 65: goto st4;
+	}
+	goto st0;
+st6:
+	if ( ++p == pe )
+		goto _test_eof6;
+case 6:
+	if ( (*p) == 67 )
+		goto st7;
+	goto tr4;
+st7:
+	if ( ++p == pe )
+		goto _test_eof7;
+case 7:
+	switch( (*p) ) {
+		case 77: goto st8;
+		case 80: goto st18;
+	}
+	goto tr4;
+st8:
+	if ( ++p == pe )
+		goto _test_eof8;
+case 8:
+	if ( (*p) == 71 )
+		goto st9;
+	goto tr4;
+st9:
+	if ( ++p == pe )
+		goto _test_eof9;
+case 9:
+	if ( (*p) == 83 )
+		goto st10;
+	goto tr4;
+st10:
+	if ( ++p == pe )
+		goto _test_eof10;
+case 10:
+	if ( (*p) == 61 )
+		goto st11;
+	goto tr4;
 st11:
 	if ( ++p == pe )
 		goto _test_eof11;
 case 11:
-#line 364 "protocole.c"
-	switch( (*p) ) {
-		case 10: goto tr16;
-		case 32: goto tr15;
-	}
-	if ( (*p) < 48 ) {
-		if ( 9 <= (*p) && (*p) <= 13 )
-			goto tr15;
-	} else if ( (*p) > 57 ) {
-		if ( (*p) > 90 ) {
-			if ( 97 <= (*p) && (*p) <= 122 )
-				goto tr15;
-		} else if ( (*p) >= 65 )
-			goto tr15;
-	} else
+	if ( (*p) == 43 )
+		goto tr14;
+	if ( 48 <= (*p) && (*p) <= 57 )
 		goto tr15;
-	goto tr0;
-tr15:
-#line 47 "protocole.rl"
+	goto tr4;
+tr14:
+#line 106 "protocole.rl"
+	{
+        ctx->cmd = CMD_SEND_SMS;
+    }
+#line 48 "protocole.rl"
+	{
+        MARK(mark, p);
+    }
+	goto st12;
+tr23:
+#line 48 "protocole.rl"
 	{
         MARK(mark, p);
     }
@@ -387,25 +334,22 @@ st12:
 	if ( ++p == pe )
 		goto _test_eof12;
 case 12:
-#line 391 "protocole.c"
-	switch( (*p) ) {
-		case 26: goto tr18;
-		case 32: goto st12;
-	}
-	if ( (*p) < 48 ) {
-		if ( 9 <= (*p) && (*p) <= 13 )
-			goto st12;
-	} else if ( (*p) > 57 ) {
-		if ( (*p) > 90 ) {
-			if ( 97 <= (*p) && (*p) <= 122 )
-				goto st12;
-		} else if ( (*p) >= 65 )
-			goto st12;
-	} else
-		goto st12;
-	goto tr0;
-tr16:
-#line 47 "protocole.rl"
+#line 338 "protocole.c"
+	if ( 48 <= (*p) && (*p) <= 57 )
+		goto st13;
+	goto tr4;
+tr15:
+#line 106 "protocole.rl"
+	{
+        ctx->cmd = CMD_SEND_SMS;
+    }
+#line 48 "protocole.rl"
+	{
+        MARK(mark, p);
+    }
+	goto st13;
+tr24:
+#line 48 "protocole.rl"
 	{
         MARK(mark, p);
     }
@@ -414,272 +358,351 @@ st13:
 	if ( ++p == pe )
 		goto _test_eof13;
 case 13:
-#line 418 "protocole.c"
+#line 362 "protocole.c"
 	switch( (*p) ) {
-		case 26: goto tr18;
-		case 32: goto tr15;
+		case 13: goto tr17;
+		case 44: goto tr18;
 	}
-	if ( (*p) < 48 ) {
-		if ( 9 <= (*p) && (*p) <= 13 )
-			goto tr15;
-	} else if ( (*p) > 57 ) {
-		if ( (*p) > 90 ) {
-			if ( 97 <= (*p) && (*p) <= 122 )
-				goto tr15;
-		} else if ( (*p) >= 65 )
-			goto tr15;
-	} else
-		goto tr15;
-	goto tr0;
-tr14:
-#line 112 "protocole.rl"
+	if ( 48 <= (*p) && (*p) <= 57 )
+		goto st13;
+	goto tr4;
+tr17:
+#line 113 "protocole.rl"
 	{
         ctx->arg[ctx->arg_count] = ctx->mark;
         ctx->arg_len[ctx->arg_count] = LEN(mark, p);
         ctx->arg_count++;
+    }
+#line 119 "protocole.rl"
+	{
+        sleep(1);   // Emulate network lag
+        tcflush(fd, TCIFLUSH);
+        write(fd, "> ", 2);
     }
 	goto st14;
 st14:
 	if ( ++p == pe )
 		goto _test_eof14;
 case 14:
-#line 447 "protocole.c"
-	if ( (*p) == 43 )
+#line 388 "protocole.c"
+	switch( (*p) ) {
+		case 10: goto tr20;
+		case 32: goto tr19;
+	}
+	if ( (*p) < 48 ) {
+		if ( 9 <= (*p) && (*p) <= 13 )
+			goto tr19;
+	} else if ( (*p) > 57 ) {
+		if ( (*p) > 90 ) {
+			if ( 97 <= (*p) && (*p) <= 122 )
+				goto tr19;
+		} else if ( (*p) >= 65 )
+			goto tr19;
+	} else
 		goto tr19;
-	if ( 48 <= (*p) && (*p) <= 57 )
-		goto tr20;
-	goto tr0;
+	goto tr4;
+tr19:
+#line 48 "protocole.rl"
+	{
+        MARK(mark, p);
+    }
+	goto st15;
 st15:
 	if ( ++p == pe )
 		goto _test_eof15;
 case 15:
-	if ( (*p) == 73 )
-		goto st16;
-	goto tr0;
+#line 415 "protocole.c"
+	switch( (*p) ) {
+		case 26: goto tr22;
+		case 32: goto st15;
+	}
+	if ( (*p) < 48 ) {
+		if ( 9 <= (*p) && (*p) <= 13 )
+			goto st15;
+	} else if ( (*p) > 57 ) {
+		if ( (*p) > 90 ) {
+			if ( 97 <= (*p) && (*p) <= 122 )
+				goto st15;
+		} else if ( (*p) >= 65 )
+			goto st15;
+	} else
+		goto st15;
+	goto tr4;
+tr20:
+#line 48 "protocole.rl"
+	{
+        MARK(mark, p);
+    }
+	goto st16;
 st16:
 	if ( ++p == pe )
 		goto _test_eof16;
 case 16:
-	if ( (*p) == 78 )
-		goto st17;
-	goto tr0;
-st17:
-	if ( ++p == pe )
-		goto _test_eof17;
-case 17:
-	if ( (*p) == 61 )
-		goto st18;
-	goto tr0;
-st18:
-	if ( ++p == pe )
-		goto _test_eof18;
-case 18:
-	if ( (*p) == 63 )
-		goto st32;
-	if ( 48 <= (*p) && (*p) <= 57 )
-		goto tr24;
-	goto tr0;
-tr24:
-#line 47 "protocole.rl"
-	{
-        MARK(mark, p);
-    }
-	goto st19;
-st19:
-	if ( ++p == pe )
-		goto _test_eof19;
-case 19:
-#line 493 "protocole.c"
+#line 442 "protocole.c"
 	switch( (*p) ) {
-		case 13: goto tr26;
-		case 44: goto tr27;
+		case 26: goto tr22;
+		case 32: goto tr19;
 	}
-	if ( 48 <= (*p) && (*p) <= 57 )
-		goto st27;
-	goto tr0;
-tr27:
-#line 112 "protocole.rl"
+	if ( (*p) < 48 ) {
+		if ( 9 <= (*p) && (*p) <= 13 )
+			goto tr19;
+	} else if ( (*p) > 57 ) {
+		if ( (*p) > 90 ) {
+			if ( 97 <= (*p) && (*p) <= 122 )
+				goto tr19;
+		} else if ( (*p) >= 65 )
+			goto tr19;
+	} else
+		goto tr19;
+	goto tr4;
+tr18:
+#line 113 "protocole.rl"
 	{
         ctx->arg[ctx->arg_count] = ctx->mark;
         ctx->arg_len[ctx->arg_count] = LEN(mark, p);
         ctx->arg_count++;
     }
-	goto st20;
+	goto st17;
+st17:
+	if ( ++p == pe )
+		goto _test_eof17;
+case 17:
+#line 471 "protocole.c"
+	if ( (*p) == 43 )
+		goto tr23;
+	if ( 48 <= (*p) && (*p) <= 57 )
+		goto tr24;
+	goto tr4;
+st18:
+	if ( ++p == pe )
+		goto _test_eof18;
+case 18:
+	if ( (*p) == 73 )
+		goto st19;
+	goto tr4;
+st19:
+	if ( ++p == pe )
+		goto _test_eof19;
+case 19:
+	if ( (*p) == 78 )
+		goto st20;
+	goto tr4;
 st20:
 	if ( ++p == pe )
 		goto _test_eof20;
 case 20:
-#line 513 "protocole.c"
-	if ( 48 <= (*p) && (*p) <= 57 )
-		goto tr29;
-	goto tr0;
-tr29:
-#line 47 "protocole.rl"
-	{
-        MARK(mark, p);
-    }
-	goto st21;
+	if ( (*p) == 61 )
+		goto st21;
+	goto tr4;
 st21:
 	if ( ++p == pe )
 		goto _test_eof21;
 case 21:
-#line 527 "protocole.c"
-	if ( (*p) == 13 )
-		goto tr30;
+	if ( (*p) == 63 )
+		goto st35;
 	if ( 48 <= (*p) && (*p) <= 57 )
-		goto st22;
-	goto tr0;
+		goto tr28;
+	goto tr4;
+tr28:
+#line 48 "protocole.rl"
+	{
+        MARK(mark, p);
+    }
+	goto st22;
 st22:
 	if ( ++p == pe )
 		goto _test_eof22;
 case 22:
-	if ( (*p) == 13 )
-		goto tr30;
+#line 517 "protocole.c"
+	switch( (*p) ) {
+		case 13: goto tr30;
+		case 44: goto tr31;
+	}
 	if ( 48 <= (*p) && (*p) <= 57 )
-		goto st23;
-	goto tr0;
+		goto st30;
+	goto tr4;
+tr31:
+#line 113 "protocole.rl"
+	{
+        ctx->arg[ctx->arg_count] = ctx->mark;
+        ctx->arg_len[ctx->arg_count] = LEN(mark, p);
+        ctx->arg_count++;
+    }
+	goto st23;
 st23:
 	if ( ++p == pe )
 		goto _test_eof23;
 case 23:
-	if ( (*p) == 13 )
-		goto tr30;
+#line 537 "protocole.c"
 	if ( 48 <= (*p) && (*p) <= 57 )
-		goto st24;
-	goto tr0;
+		goto tr33;
+	goto tr4;
+tr33:
+#line 48 "protocole.rl"
+	{
+        MARK(mark, p);
+    }
+	goto st24;
 st24:
 	if ( ++p == pe )
 		goto _test_eof24;
 case 24:
+#line 551 "protocole.c"
 	if ( (*p) == 13 )
-		goto tr30;
+		goto tr34;
 	if ( 48 <= (*p) && (*p) <= 57 )
 		goto st25;
-	goto tr0;
+	goto tr4;
 st25:
 	if ( ++p == pe )
 		goto _test_eof25;
 case 25:
 	if ( (*p) == 13 )
-		goto tr30;
+		goto tr34;
 	if ( 48 <= (*p) && (*p) <= 57 )
 		goto st26;
-	goto tr0;
+	goto tr4;
 st26:
 	if ( ++p == pe )
 		goto _test_eof26;
 case 26:
 	if ( (*p) == 13 )
-		goto tr30;
-	goto tr0;
+		goto tr34;
+	if ( 48 <= (*p) && (*p) <= 57 )
+		goto st27;
+	goto tr4;
 st27:
 	if ( ++p == pe )
 		goto _test_eof27;
 case 27:
-	switch( (*p) ) {
-		case 13: goto tr26;
-		case 44: goto tr27;
-	}
+	if ( (*p) == 13 )
+		goto tr34;
 	if ( 48 <= (*p) && (*p) <= 57 )
 		goto st28;
-	goto tr0;
+	goto tr4;
 st28:
 	if ( ++p == pe )
 		goto _test_eof28;
 case 28:
-	switch( (*p) ) {
-		case 13: goto tr26;
-		case 44: goto tr27;
-	}
+	if ( (*p) == 13 )
+		goto tr34;
 	if ( 48 <= (*p) && (*p) <= 57 )
 		goto st29;
-	goto tr0;
+	goto tr4;
 st29:
 	if ( ++p == pe )
 		goto _test_eof29;
 case 29:
-	switch( (*p) ) {
-		case 13: goto tr26;
-		case 44: goto tr27;
-	}
-	if ( 48 <= (*p) && (*p) <= 57 )
-		goto st30;
-	goto tr0;
+	if ( (*p) == 13 )
+		goto tr34;
+	goto tr4;
 st30:
 	if ( ++p == pe )
 		goto _test_eof30;
 case 30:
 	switch( (*p) ) {
-		case 13: goto tr26;
-		case 44: goto tr27;
+		case 13: goto tr30;
+		case 44: goto tr31;
 	}
 	if ( 48 <= (*p) && (*p) <= 57 )
 		goto st31;
-	goto tr0;
+	goto tr4;
 st31:
 	if ( ++p == pe )
 		goto _test_eof31;
 case 31:
 	switch( (*p) ) {
-		case 13: goto tr26;
-		case 44: goto tr27;
+		case 13: goto tr30;
+		case 44: goto tr31;
 	}
-	goto tr0;
+	if ( 48 <= (*p) && (*p) <= 57 )
+		goto st32;
+	goto tr4;
 st32:
 	if ( ++p == pe )
 		goto _test_eof32;
 case 32:
-	if ( (*p) == 13 )
-		goto tr40;
-	goto tr0;
+	switch( (*p) ) {
+		case 13: goto tr30;
+		case 44: goto tr31;
+	}
+	if ( 48 <= (*p) && (*p) <= 57 )
+		goto st33;
+	goto tr4;
 st33:
 	if ( ++p == pe )
 		goto _test_eof33;
 case 33:
 	switch( (*p) ) {
+		case 13: goto tr30;
+		case 44: goto tr31;
+	}
+	if ( 48 <= (*p) && (*p) <= 57 )
+		goto st34;
+	goto tr4;
+st34:
+	if ( ++p == pe )
+		goto _test_eof34;
+case 34:
+	switch( (*p) ) {
+		case 13: goto tr30;
+		case 44: goto tr31;
+	}
+	goto tr4;
+st35:
+	if ( ++p == pe )
+		goto _test_eof35;
+case 35:
+	if ( (*p) == 13 )
+		goto tr44;
+	goto tr4;
+st36:
+	if ( ++p == pe )
+		goto _test_eof36;
+case 36:
+	switch( (*p) ) {
 		case 10: goto st0;
-		case 13: goto tr43;
+		case 13: goto tr47;
 	}
-	goto st33;
-tr43:
-#line 80 "protocole.rl"
+	goto st36;
+tr47:
+#line 81 "protocole.rl"
 	{
         write(fd, "ERROR\r\n", 7);
         ctx->arg_count = 0;
-        {goto st34;}
+        {goto st1;}
     }
-	goto st37;
-st37:
+	goto st39;
+st39:
 	if ( ++p == pe )
-		goto _test_eof37;
-case 37:
-#line 657 "protocole.c"
+		goto _test_eof39;
+case 39:
+#line 681 "protocole.c"
 	if ( (*p) == 10 )
-		goto tr48;
+		goto tr49;
 	goto st0;
-tr48:
-#line 80 "protocole.rl"
+tr49:
+#line 81 "protocole.rl"
 	{
         write(fd, "ERROR\r\n", 7);
         ctx->arg_count = 0;
-        {goto st34;}
+        {goto st1;}
     }
-	goto st38;
-st38:
+	goto st40;
+st40:
 	if ( ++p == pe )
-		goto _test_eof38;
-case 38:
-#line 673 "protocole.c"
+		goto _test_eof40;
+case 40:
+#line 697 "protocole.c"
 	goto st0;
 	}
-	_test_eof34: cs = 34; goto _test_eof; 
-	_test_eof35: cs = 35; goto _test_eof; 
 	_test_eof1: cs = 1; goto _test_eof; 
 	_test_eof2: cs = 2; goto _test_eof; 
-	_test_eof36: cs = 36; goto _test_eof; 
 	_test_eof3: cs = 3; goto _test_eof; 
 	_test_eof4: cs = 4; goto _test_eof; 
 	_test_eof5: cs = 5; goto _test_eof; 
+	_test_eof37: cs = 37; goto _test_eof; 
+	_test_eof38: cs = 38; goto _test_eof; 
 	_test_eof6: cs = 6; goto _test_eof; 
 	_test_eof7: cs = 7; goto _test_eof; 
 	_test_eof8: cs = 8; goto _test_eof; 
@@ -708,14 +731,16 @@ case 38:
 	_test_eof31: cs = 31; goto _test_eof; 
 	_test_eof32: cs = 32; goto _test_eof; 
 	_test_eof33: cs = 33; goto _test_eof; 
-	_test_eof37: cs = 37; goto _test_eof; 
-	_test_eof38: cs = 38; goto _test_eof; 
+	_test_eof34: cs = 34; goto _test_eof; 
+	_test_eof35: cs = 35; goto _test_eof; 
+	_test_eof36: cs = 36; goto _test_eof; 
+	_test_eof39: cs = 39; goto _test_eof; 
+	_test_eof40: cs = 40; goto _test_eof; 
 
 	_test_eof: {}
 	if ( p == eof )
 	{
 	switch ( cs ) {
-	case 1: 
 	case 2: 
 	case 3: 
 	case 4: 
@@ -747,19 +772,32 @@ case 38:
 	case 30: 
 	case 31: 
 	case 32: 
-#line 73 "protocole.rl"
+	case 33: 
+	case 34: 
+	case 35: 
+#line 74 "protocole.rl"
 	{
-        {goto st33;}
+        {goto st36;}
     }
 	break;
-#line 756 "protocole.c"
+	case 1: 
+#line 65 "protocole.rl"
+	{
+        p--; {goto st36;}
+    }
+#line 74 "protocole.rl"
+	{
+        {goto st36;}
+    }
+	break;
+#line 794 "protocole.c"
 	}
 	}
 
 	_out: {}
 	}
 
-#line 185 "protocole.rl"
+#line 188 "protocole.rl"
     
     ctx->cs = cs;
 }
